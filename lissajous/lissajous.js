@@ -1,12 +1,16 @@
 
 var lissajous = document.getElementById("lissajous");
+var title = document.getElementById("title");
+var freqInput = document.getElementById("freq");
 
+var freq = 4;
 
 
 function initScreen() {
 
     let lissajous = document.getElementById("lissajous");
 
+    title.innerHTML = freq;
 
     // lissajous.setAttribute("d", draw(0.0));
     // updateWithTransform(0.0 + 0.01);
@@ -28,6 +32,7 @@ function updateScreen(phase) {
 
 
 // transform matrix
+// FIX ME
 function updateWithTransform(phase) {
 
     let d = 1 / Math.sin(phase);
@@ -47,7 +52,7 @@ function updateWithTransform(phase) {
 function draw(phase) {
 
     const size = 90;
-    const freq = 4;
+    // const freq = 4;
     // const phase = Math.PI / 2;
     const delta = 0.01;
 
@@ -78,3 +83,10 @@ function draw(phase) {
 
 
 initScreen();
+
+freqInput.onchange = function (e) {
+    console.log(e.target.value);
+
+    freq = e.target.value;
+    title.innerHTML = freq;
+};
