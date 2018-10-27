@@ -10,11 +10,10 @@ const zScale = height * 0.4;    // pixels per z unit
 const cellNum = 100;
 
 
-var angle = Math.PI / 6;
-var sinA = Math.sin(angle);
-var cosA = Math.cos(angle);
+const angle = Math.PI / 6;
+const sinA = Math.sin(angle);
+const cosA = Math.cos(angle);
 
-var adjust = 0.0;
 var customFn = '';
 
 var plot = document.getElementById('plot');
@@ -37,36 +36,16 @@ function initScreen() {
         render();
     }
 
-    // update(0.01);
 }
 
 function pointStr(x, y) {
     return x + ',' + y + ' ';
 }
 
-function update(d) {
-
-    // angle = Math.PI / 6;
-    // sinA = Math.sin(angle);
-    // cosA = Math.cos(angle);
-
-    adjust += d;
-    // adjust %= 20;
-
-    render();
-
-    requestAnimationFrame(function () {
-        update((d + 0.001) % 10);
-    });
-}
-
 
 function render() {
 
     // clean and reset
-    // while (plot.hasChildNodes()) {
-    //     plot.removeChild(plot.firstChild);
-    // }
     plot.remove();
     plot = document.createElementNS("http://www.w3.org/2000/svg", 'g');
     plot.setAttribute('id', 'plot');
@@ -81,7 +60,12 @@ function render() {
             let [dx, dy] = cellCorner(i + 1, j + 1);
 
             let polygonEle = document.createElementNS("http://www.w3.org/2000/svg", 'polygon');
-            polygonEle.setAttribute('points', pointStr(ax, ay) + pointStr(bx, by) + pointStr(cx, cy) + pointStr(dx, dy))
+            polygonEle.setAttribute('points',
+                pointStr(ax, ay) +
+                pointStr(bx, by) +
+                pointStr(cx, cy) +
+                pointStr(dx, dy)
+            )
 
             plot.appendChild(polygonEle);
         }
@@ -116,9 +100,9 @@ function cellCorner(i, j) {
 function f(x, y) {
     let r = Math.hypot(x, y);
     if (r == 0) {
-        return 0;
+        return 1;
     }
-    // r += adjust;
+
     return Math.sin(r) / r;
 }
 
