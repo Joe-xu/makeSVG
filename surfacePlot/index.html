@@ -4,9 +4,9 @@
 <head>
         <style>
                 #plot {
-                        fill: transparent;
+                        stroke: url(#grad);
                         stroke-width: 0.1px;
-                        stroke: black;
+                        fill: transparent;
                 }
         </style>
 </head>
@@ -14,10 +14,19 @@
 <body>
         <h1># surface plot</h1>
         <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="600" height="600" viewBox="0 0 500 500">
-                <g id="plot"></g>
+                <defs>
+                        <radialGradient id="grad" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+                                <stop offset="0%" style="stop-color:rgba(255, 0, 0, 1);" />
+                                <stop offset="50%" style="stop-color:rgba(255, 230, 0, 1);" />
+                                <stop offset="100%" style="stop-color:rgba(0, 255, 55, 1)" />
+                        </radialGradient>
+                </defs>
+                <path id="plot"></path>
         </svg>
 
-        <div style="display: inline-block;">
+        <button id="animateBtn">animate</button>
+        <br />
+        <div>
                 <p>function z( x, y ){</p>
                 <textarea name="fn" id="fn" cols="30" rows="10" placeholder="return x+y;"></textarea>
                 <p>}</p>

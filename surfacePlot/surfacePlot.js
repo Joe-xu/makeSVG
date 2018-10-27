@@ -20,11 +20,20 @@ var plot = document.getElementById('plot');
 var submitBtn = document.getElementById('submitBtn');
 var fnInput = document.getElementById('fn');
 
+
+// about animation
+var adjust = 0.0;
+var cancelAnimate = true;
+
 function initScreen() {
 
     render();
 
+    //  setup listener
     submitBtn.onclick = function () {
+
+        document.getElementById('animateBtn').remove();
+
         customFn = eval(`(
             function(x,y){
                 `+
@@ -36,20 +45,38 @@ function initScreen() {
         render();
     }
 
+    document.getElementById('animateBtn').onclick = function () {
+
+        if (customFn !== '' || !cancelAnimate) {
+            cancelAnimate = true;
+            this.innerHTML = "animate";
+            return;
+        }
+
+        cancelAnimate = false;
+        this.innerHTML = "stop";
+
+        update(0.01);
+    }
+
 }
 
-function pointStr(x, y) {
-    return x + ',' + y + ' ';
-}
+function update(d) {
+    if (cancelAnimate) return;
 
+    adjust += d;
+
+    render();
+
+    requestAnimationFrame(function () {
+        update(d + 0.01);
+    });
+}
 
 function render() {
 
-    // clean and reset
-    plot.remove();
-    plot = document.createElementNS("http://www.w3.org/2000/svg", 'g');
-    plot.setAttribute('id', 'plot');
-    document.getElementsByTagName('svg')[0].appendChild(plot);
+
+    let drawCmd = "";
 
     for (let i = 0; i < cellNum; i++) {
         for (let j = 0; j < cellNum; j++) {
@@ -59,17 +86,16 @@ function render() {
             let [cx, cy] = cellCorner(i, j + 1);
             let [dx, dy] = cellCorner(i + 1, j + 1);
 
-            let polygonEle = document.createElementNS("http://www.w3.org/2000/svg", 'polygon');
-            polygonEle.setAttribute('points',
-                pointStr(ax, ay) +
-                pointStr(bx, by) +
-                pointStr(cx, cy) +
-                pointStr(dx, dy)
-            )
 
-            plot.appendChild(polygonEle);
+            drawCmd += 'M ' + bx + ' ' + by + ' ' +
+                'L ' + ax + ' ' + ay + ' ' +
+                'L ' + dx + ' ' + dy + ' ' +
+                'L ' + cx + ' ' + cy + ' Z ';
+
         }
     }
+
+    plot.setAttribute('d', drawCmd);
 
 }
 
@@ -86,9 +112,6 @@ function cellCorner(i, j) {
     let rx = centerX + (x - y) * cosA * xyScale;
     let ry = centerY + (x + y) * sinA * xyScale - z * zScale;
 
-    // let rx = width / 2 + x * sinA * xyScale;
-    // let ry = height / 2 + y * sinA * xyScale - z * zScale;
-
 
     if (isNaN(ry)) {
         debugger;
@@ -99,10 +122,12 @@ function cellCorner(i, j) {
 
 function f(x, y) {
     let r = Math.hypot(x, y);
+
+    r += adjust;
+
     if (r == 0) {
         return 1;
     }
-
     return Math.sin(r) / r;
 }
 
