@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+        <style>
+                #plot {
+                        fill: transparent;
+                        stroke-width: 0.1px;
+                        stroke: black;
+                }
+        </style>
+</head>
+
+<body>
+        <h1># surface plot</h1>
+        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="600" height="600" viewBox="0 0 500 500">
+                <g id="plot"></g>
+        </svg>
+
+        <div style="display: inline-block;">
+                <p>function z( x, y ){</p>
+                <textarea name="fn" id="fn" cols="30" rows="10" placeholder="   return x+y;"></textarea>
+                <p>}</p>
+                <input type="submit" id="submitBtn">
+        </div>
+</body>
+<script src="./surfacePlot.js"></script>
+
+</html>
